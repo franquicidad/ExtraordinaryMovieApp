@@ -4,38 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:coverflow="http://schemas.android.com/apk/res-auto"
     android:background="#333639"
     tools:context=".UI.MainActivity">
 
     <it.moondroid.coverflow.components.ui.containers.FeatureCoverFlow
-        android:id="@+id/coverFlow"
+        android:id="@+id/coverflow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello World!"
-        app:coverHeight="200dp"
-        app:coverWidth="150dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:maxScaleFactor="1.5"
-        app:reflectionGap="0px"
-        app:rotationThreshold="0.5"
-        app:scalingThreshold="0.5"
-        app:spacing="0.6" />
+        coverflow:coverHeight="@dimen/cover_height"
+        coverflow:coverWidth="@dimen/cover_width"
+        coverflow:maxScaleFactor="1.5"
+        coverflow:reflectionGap="0px"
+        coverflow:rotationThreshold="0.5"
+        coverflow:scalingThreshold="0.5"
+        coverflow:spacing="0.6" />
 
     <TextSwitcher
-
-        android:id="@+id/mtitle"
-        android:layout_width="172dp"
-        android:layout_height="51dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp"
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:paddingBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/coverFlow"
-        tools:layout_editor_absoluteX="16dp">
-
-    </TextSwitcher>
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true" />
 
 </RelativeLayout>

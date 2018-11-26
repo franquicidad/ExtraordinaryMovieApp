@@ -24,8 +24,8 @@ public class MovieAdapter extends BaseAdapter {
 
     public Movie movie;
 
-    public MovieAdapter(ArrayList<Movie> movieList, Context context) {
-        this.movieList = movieList;
+    public MovieAdapter(Context context) {
+
         this.context = context;
     }
 
@@ -69,7 +69,7 @@ public class MovieAdapter extends BaseAdapter {
             ImageView imageView = (ImageView) view.findViewById(R.id.image);
 
             Glide.with(context).load(movieList.get(position).getPoster_path()).into(imageView);
-            name.setText(movieList.get(position).getMovieName());
+            name.setText(movieList.get(position).getTitle());
 
             return view;
         }

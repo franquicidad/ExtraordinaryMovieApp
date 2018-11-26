@@ -6,15 +6,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.franco.mac.extraordinarymovieapp.API.RetrofitBuilder;
+import com.franco.mac.extraordinarymovieapp.Adapter.CoverFlowAdapter;
 import com.franco.mac.extraordinarymovieapp.Adapter.MovieAdapter;
 import com.franco.mac.extraordinarymovieapp.Common.Common;
+import com.franco.mac.extraordinarymovieapp.Model.GameEntity;
 import com.franco.mac.extraordinarymovieapp.Model.Movie;
+import com.franco.mac.extraordinarymovieapp.Model.MoviesList;
 import com.franco.mac.extraordinarymovieapp.R;
 import com.franco.mac.extraordinarymovieapp.Urls;
 
@@ -29,90 +35,131 @@ public class MainActivity extends AppCompatActivity {
 
     FeatureCoverFlow coverFlow;
     MovieAdapter adapter;
-    TextSwitcher mTitle;
+    //TextSwitcher mTitle;
     private ArrayList<Movie> mMovieArraylist;
     Movie movie;
 
-
+//_____________________________________________
+private FeatureCoverFlow mCoverFlow;
+    private CoverFlowAdapter mAdapter;
+    private ArrayList<GameEntity> mData = new ArrayList<>(0);
+    private TextSwitcher mTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-          initData();
+
+//        mMovieArraylist= new ArrayList<>();
+//
+//        adapter=new MovieAdapter(this);
+//        mTitle=(TextSwitcher)findViewById(R.id.title);
+//
+//        mTitle.setFactory(new ViewSwitcher.ViewFactory() {
+//            @Override
+//            public View makeView() {
+//                LayoutInflater inflater=LayoutInflater.from(MainActivity.this);
+//                TextView name= (TextView)inflater.inflate(R.layout.layout_title,null);
+//
+//                return name;
+//            }
+//        });
+//        coverFlow=(FeatureCoverFlow)findViewById(R.id.coverflow);
+//        coverFlow.setAdapter(adapter);
+//
+//            coverFlow.setOnScrollPositionListener(new FeatureCoverFlow.OnScrollPositionListener() {
+//                @Override
+//                public void onScrolledToPosition(int position) {
+//                    mTitle.setText(Common.movieList.get(position).getMovieName());
+//
+//                }
+//
+//                @Override
+//                public void onScrolling() {
+//
+//                }
+//            });
+//            coverFlow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    Intent intent =new Intent(MainActivity.this,DetailMovie.class);
+//                    intent.putExtra("movie_index_clicked",position);
+//                    startActivity(intent);
+//                }
+//            });
+//
+GetData();
 
 
 
-        adapter=new MovieAdapter(mMovieArraylist,this);
-        mTitle=(TextSwitcher)findViewById(R.id.mtitle);
+
+        //-----------------------------------------------------------------
+
+
+        mData.add(new GameEntity(R.mipmap.ic_launcher, R.string.title1));
+        mData.add(new GameEntity(R.mipmap.ic_launcher, R.string.title2));
+        mData.add(new GameEntity(R.mipmap.ic_launcher, R.string.title3));
+        mData.add(new GameEntity(R.mipmap.ic_launcher, R.string.title4));
+
+        mTitle = (TextSwitcher) findViewById(R.id.title);
         mTitle.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
-                LayoutInflater inflater=LayoutInflater.from(MainActivity.this);
-                TextView name= (TextView)inflater.inflate(R.layout.layout_title,null);
-
-                return name;
+                LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+                TextView textView = (TextView) inflater.inflate(R.layout.layout_title, null);
+                return textView;
             }
         });
-        coverFlow=(FeatureCoverFlow)findViewById(R.id.coverFlow);
-        coverFlow.setAdapter(adapter);
+        Animation in = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
+        Animation out = AnimationUtils.loadAnimation(this, R.anim.slide_out_bottom);
+        mTitle.setInAnimation(in);
+        mTitle.setOutAnimation(out);
 
-            coverFlow.setOnScrollPositionListener(new FeatureCoverFlow.OnScrollPositionListener() {
-                @Override
-                public void onScrolledToPosition(int position) {
-                    mTitle.setText(Common.movieList.get(position).getMovieName());
+        mAdapter = new CoverFlowAdapter(this);
+        mAdapter.setData(mData);
+        mCoverFlow = (FeatureCoverFlow) findViewById(R.id.coverflow);
+        mCoverFlow.setAdapter(mAdapter);
 
-                }
-
-                @Override
-                public void onScrolling() {
-
-                }
-            });
-            coverFlow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent =new Intent(MainActivity.this,DetailMovie.class);
-                    intent.putExtra("movie_index_clicked",position);
-                    startActivity(intent);
-                }
-            });
-
-    }
-
-    private void initData() {
-
-
-        Call<ArrayList<Movie>> arrayListCall= RetrofitBuilder.getMovie();
-        arrayListCall.enqueue(new Callback<ArrayList<Movie>>() {
+        mCoverFlow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onResponse(Call<ArrayList<Movie>> call, Response<ArrayList<Movie>> response) {
-               
-                mMovieArraylist=response.body();
-                adapter.setMovieData(mMovieArraylist);
-
-
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Movie>> call, Throwable t) {
-
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(),
+                        getResources().getString(mData.get(position).titleResId),
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
-//        Movie movie1=new Movie("Spiderman: Homecoming", Urls.spiderman,String.valueOf(R.string.spiderman));
-//        Common.movieList.add(movie1);
-//
-//        Movie movie2=new Movie("Avengers: Infinity War",Urls.AvengersInfinity,String.valueOf(R.string.spiderman));
-//        Common.movieList.add(movie2);
-//
-//        Movie movie3=new Movie("Captain America:Civil War",Urls.Civil_war,String.valueOf(R.string.spiderman));
-//        Common.movieList.add(movie3);
-//
-//        Movie movie4=new Movie("Antman and the Wasp",Urls.Antman,String.valueOf(R.string.spiderman));
-//        Common.movieList.add(movie4);
+        mCoverFlow.setOnScrollPositionListener(new FeatureCoverFlow.OnScrollPositionListener() {
+            @Override
+            public void onScrolledToPosition(int position) {
+                mTitle.setText(getResources().getString(mData.get(position).titleResId));
+            }
 
+            @Override
+            public void onScrolling() {
+                mTitle.setText("");
+            }
+        });
 
 
     }
+
+    private void GetData(){
+        RetrofitBuilder retrofitBuilder=new RetrofitBuilder();
+        Call<MoviesList> movieResultCallback = retrofitBuilder.getMovie();
+        movieResultCallback.enqueue(new Callback<MoviesList>() {
+            @Override
+            public void onResponse(Call<MoviesList> call, Response<MoviesList> response) {
+                Log.d("Datos",response.toString());
+            }
+
+            @Override
+            public void onFailure(Call<MoviesList> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+
 }

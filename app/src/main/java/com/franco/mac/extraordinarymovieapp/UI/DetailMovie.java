@@ -51,7 +51,7 @@ public class DetailMovie extends AppCompatActivity {
 
 
         Glide.with(getApplicationContext()).load(movie.getPoster_path()).into(movieImage);
-        movieTitle.setText(movie.getMovieName());
+        movieTitle.setText(movie.getTitle());
         movieSummary.setText(movie.getOverview());
     }
 }
